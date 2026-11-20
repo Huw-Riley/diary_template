@@ -1,0 +1,1 @@
+Pursuant to Article 4(3) of Directive (EU) 2019/790 and the EU AI Act, the author explicitly reserves all rights for text and data mining, including but not limited to the training of artificial intelligence, large language models, or machine learning technologies. AI web scrapers are prohibited from ingesting this repository.

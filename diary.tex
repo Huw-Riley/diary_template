@@ -1,0 +1,319 @@
+%! LW recipe=pdflatex -> biber -> pdflatex*2
+% the above comment is the recommended recipe for comilation. It only works in VS Code or COdium. Overleaf will ignore it. 
+
+%%% Document preamble %%%
+
+\documentclass[a4paper,11pt]{article}
+
+% Package import and configuration
+\usepackage{amsmath}		
+\usepackage{amssymb}		
+\usepackage{siunitx}		
+\usepackage{graphicx}
+\usepackage{xcolor}	
+\usepackage{svg}
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+\usepackage{subcaption}
+\graphicspath{{Figures/}}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{physics}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{geometry} 
+\usepackage{enumitem}
+\usepackage{wrapfig}
+\usepackage{etoolbox}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% allows the use of the macros found in NASA ADS. e.g. \mnras -> Monthly Notices of the Royal Astronomical Society
+\usepackage{aas_macros}
+% last name et al or last name and last name then year. paren cite puts them in brackets
+\usepackage[
+backend=biber,
+uniquename=false,
+uniquelist=false,
+giveninits=true,
+style=authoryear,
+sorting=none
+]{biblatex}
+\addbibresource{References.bib}
+\setlength{\biblabelsep}{.5em}
+\DeclareNameAlias{author}{family-given}
+
+% Mimics the short reference style from MNRAS
+% removes fields from the reference
+\AtEveryBibitem{
+  \clearfield{title}
+  \clearfield{keywords}
+  \clearfield{booktitle}
+  \clearfield{editor}
+  \clearfield{month}
+  \clearfield{volume}
+  \clearfield{number}
+  \clearfield{eid}
+  \clearfield{pages}
+  \clearfield{doi}
+  \clearfield{archivePrefix}
+  \clearfield{eprint}
+  \clearfield{primaryClass}
+  \clearfield{adsurl}
+  \clearfield{adsnote}
+}
+\renewbibmacro{in:}{}
+\DefineBibliographyStrings{english}{%
+  page             = {},
+  pages            = {},
+} 
+\renewcommand*{\bibfont}{\normalfont\small}
+
+% allows hyperlinks in the text that lead to figures. e.g. \autoref{label} -> clicking it leads to a table or figure. 
+% aloows for links to be embedded into the pdf as well
+\usepackage{hyperref}			
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    citecolor=cyan,
+}
+\newgeometry{
+    top=0.75in,
+    bottom=0.75in,
+    outer=0.75in,
+    inner=0.75in,
+}
+
+% personal preference for citations in text.
+% also allows for \parencite[see][]{reference}
+\DeclareCiteCommand{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{citeyear}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+    \printtext[bibhyperref]{\usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+    \printtext[bibhyperref]{\usebibmacro{citeyear}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+  % setup for listing code in latex
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{255,255,255}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% custom caption for figures inside figures
+\newcommand\newsubcap[1]{\phantomcaption%
+       \caption*{\figurename~\thefigure\thesubfigure: #1}}
+
+% uncomment if you get the warning with the packages siunitx and physics about shared commands
+% \AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+% Document title and author settings
+\title{Project Diary}
+\author{John Smith}
+\date{Compiled: \today}
+
+% Language and region settings
+\usepackage[noconfigs, british]{babel}% UK English babel package
+\usepackage[maxlevel=3]{csquotes}% it complains otherwise
+\usepackage[british]{isodate}% Use UK format dates
+\cleanlookdateon% Suppress ordinal superscripts
+\addto{\captionsbritish}{\renewcommand*{\contentsname}{Diary contents}}% Sets the ToC title
+\pagenumbering{roman}% Set ToC to have Roman numeral page numbers
+
+%%% Document body %%%
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+\newtoggle{Papers}
+\toggletrue{Papers}
+\newcommand{\weeklytasks}{
+    \iftoggle{Papers}{\item Review the relevant literature for the project.}{}
+}
+
+\newcommand\week{1}
+\newcommand\weekbegin{}
+\newcommand\weekend{}
+\renewcommand\day{}
+\renewcommand\month{}
+\newcommand\monthend{\month}
+\newcommand\weekbeginon{}
+\renewcommand\year{}
+\newcommand\weekendon{}
+\newcommand\on{}
+\newpage
+\section*{Week \week: \texorpdfstring{$\mathbf{\weekbegin^{\weekbeginon}}$ \month\ \year\ – $\mathbf{\weekend^{\weekendon}}${} \monthend{} \year}{}}\label{sec:w1}
+\addcontentsline{toc}{section}{\protect\numberline{}Week \week: \texorpdfstring{$\mathbf{\weekbegin^{\weekbeginon}}$ \month\ \year\ – $\mathbf{\weekend^{\weekendon}}${} \monthend{} \year}{}}
+
+\subsection*{Week \week\ Objectives:}\label{ssec:w1_objectives}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Week \week\ Objectives}
+
+\newtoggle{Item}
+\toggletrue{Item}
+\appto{\weeklytasks}{\iftoggle{Item}{\item New Task Added This Week}{}}
+
+\begin{enumerate}
+  \weeklytasks{}
+\end{enumerate}
+
+\subsection*{Monday $\mathbf{\weekbegin^{\weekbeginon}}$ \month:}\label{ssec:w1_monday}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Monday \texorpdfstring{$\weekbegin^{\weekbeginon}$}{} \month}
+
+\par\noindent 
+
+% \renewcommand\month{}
+\renewcommand\on{}
+\subsection*{Tuesday $\mathbf{\day^{\on}}$ \month:}\label{ssec:w1_tuesday}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Tuesday \texorpdfstring{$\day^{\on}$}{} \month}
+
+\par\noindent 
+
+\renewcommand\day{}
+% \renewcommand\month{}
+\renewcommand\on{}
+\subsection*{Wednesday $\mathbf{\day^{\on}}$ \month:}\label{ssec:w1_wednesday}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Wednesday \texorpdfstring{$\day^{\on}$}{} \month}
+
+\par\noindent 
+
+\renewcommand\day{}
+% \renewcommand\month{}
+\renewcommand\on{}
+\subsection*{Thursday $\mathbf{\day^{\on}}$ \month:}\label{ssec:w1_thursday}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Thursday \texorpdfstring{$\day^{\on}$}{} \month}
+
+\par\noindent 
+
+\renewcommand\day{}
+\renewcommand\on{}
+\subsection*{Friday $\mathbf{\day^{\on}}$ \monthend:}\label{ssec:w1_friday}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Friday \texorpdfstring{$\day^{\on}$}{} \monthend}
+
+\par\noindent
+
+% ------------------------------------------------------
+
+% \renewcommand\week{}
+% \renewcommand\weekbegin{}
+% \renewcommand\weekend{}
+% \renewcommand\day{}
+% % \renewcommand\month{}
+% % \renewcommand\monthend{\month}
+% \renewcommand\weekbeginon{}
+% % \renewcommand\year{}
+% \renewcommand\weekendon{}
+% \newpage
+% \section*{Week \week: \texorpdfstring{$\mathbf{\weekbegin^{\weekbeginon}}$ \month\ \year\ – $\mathbf{\weekend^{\weekendon}}${} \monthend{} \year}{}}\label{sec:wx}
+% \addcontentsline{toc}{section}{\protect\numberline{}Week \week: \texorpdfstring{$\mathbf{\weekbegin^{\weekbeginon}}$ \month\ \year\ – $\mathbf{\weekend^{\weekendon}}${} \monthend{} \year}{}}
+
+% \subsection*{Week \week\ Objectives:}\label{ssec:wx_objectives}
+% \addcontentsline{toc}{subsection}{\protect\numberline{}Week \week\ Objectives}
+
+% % \newtoggle{Item}
+% % \toggletrue{Item}
+% % \appto{\weeklytasks}{\iftoggle{Item}{\item New Task Added This Week}{}}
+
+% \begin{enumerate}
+%   \weeklytasks{}
+% \end{enumerate}
+
+% \subsection*{Monday $\mathbf{\weekbegin^{\weekbeginon}}$ \month:}\label{ssec:wx_monday}
+% \addcontentsline{toc}{subsection}{\protect\numberline{}Monday \texorpdfstring{$\weekbegin^{\weekbeginon}$}{} \month}
+
+% \par\noindent 
+
+% % \renewcommand\month{}
+% \renewcommand\on{th}
+% \subsection*{Tuesday $\mathbf{\day^{\on}}$ \month:}\label{ssec:wx_tuesday}
+% \addcontentsline{toc}{subsection}{\protect\numberline{}Tuesday \texorpdfstring{$\day^{\on}$}{} \month}
+
+% \par\noindent 
+
+% \renewcommand\day{}
+% % \renewcommand\month{}
+% \renewcommand\on{th}
+% \subsection*{Wednesday $\mathbf{\day^{\on}}$ \month:}\label{ssec:wx_wednesday}
+% \addcontentsline{toc}{subsection}{\protect\numberline{}Wednesday \texorpdfstring{$\day^{\on}$}{} \month}
+
+% \par\noindent 
+
+% \renewcommand\day{}
+% % \renewcommand\month{}
+% \renewcommand\on{th}
+% \subsection*{Thursday $\mathbf{\day^{\on}}$ \month:}\label{ssec:wx_thursday}
+% \addcontentsline{toc}{subsection}{\protect\numberline{}Thursday \texorpdfstring{$\day^{\on}$}{} \month}
+
+% \par\noindent 
+
+% \renewcommand\day{}
+% % \renewcommand\monthend{}
+% \renewcommand\on{th}
+% \subsection*{Friday $\mathbf{\day^{\on}}$ \monthend:}\label{ssec:wx_friday}
+% \addcontentsline{toc}{subsection}{\protect\numberline{}Friday \texorpdfstring{$\day^{\on}$}{} \monthend}
+
+% \par\noindent
+
+
+\newpage
+\begin{multicols}{2}
+[
+\begin{centering}
+  \section*{\normalsize{\normalfont{REFERENCES}}}
+\end{centering}
+% \hfuzz=1.5pt
+\vspace{-0.9cm}
+]
+\printbibliography[heading=none]
+\addcontentsline{toc}{section}{\protect\numberline{}Bibliography}
+\end{multicols}
+\end{document}
